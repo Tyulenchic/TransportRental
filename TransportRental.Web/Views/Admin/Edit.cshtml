@@ -1,0 +1,41 @@
+@model TransportRental.Core.Models.User
+@{
+    ViewData["Title"] = "Редактировать пользователя";
+    var roles = ViewBag.Roles as List<(int RoleId, string Name)> ?? new();
+}
+
+<h2>Редактировать пользователя</h2>
+
+<div class="row">
+    <div class="col-md-6">
+        <form asp-action="Edit" asp-route-id="@Model.Id" method="post">
+            <div class="mb-3">
+                <label class="form-label">Логин</label>
+                <input type="text" class="form-control" value="@Model.Username" disabled />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">ФИО</label>
+                <input type="text" name="fullName" value="@Model.FullName" class="form-control" required />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Роль</label>
+                <select name="roleId" class="form-select">
+                    @foreach (var role in roles)
+                    {
+                        <option value="@role.RoleId" selected="@(Model.RoleId == role.RoleId)">@role.Name</option>
+                    }
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Новый пароль (оставьте пустым, чтобы не менять)</label>
+                <input type="password" name="newPassword" class="form-control" />
+            </div>
+
+            <button type="submit" class="btn btn-primary">Сохранить</button>
+            <a asp-action="Index" class="btn btn-secondary">Отмена</a>
+        </form>
+    </div>
+</div>

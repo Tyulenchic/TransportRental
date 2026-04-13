@@ -1,0 +1,62 @@
+@model TransportRental.Core.Models.Rental
+@using TransportRental.Core.Models
+@{
+    ViewData["Title"] = "Возврат транспорта";
+    var calculatedPrice = (decimal)ViewBag.CalculatedPrice;
+}
+
+<h2>Возврат транспорта</h2>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">Информация о прокате</h5>
+            </div>
+            <div class="card-body">
+                <dl class="row mb-0">
+                    <dt class="col-sm-5">Прокат #</dt>
+                    <dd class="col-sm-7">@Model.Id</dd>
+
+                    <dt class="col-sm-5">Транспорт</dt>
+                    <dd class="col-sm-7">@Model.Vehicle?.Name</dd>
+
+                    <dt class="col-sm-5">Клиент</dt>
+                    <dd class="col-sm-7">@Model.Customer?.FullName</dd>
+
+                    <dt class="col-sm-5">Дата начала</dt>
+                    <dd class="col-sm-7">@Model.StartDate.ToString("dd.MM.yyyy HH:mm")</dd>
+
+                    <dt class="col-sm-5">Ожидаемый возврат</dt>
+                    <dd class="col-sm-7">@Model.ExpectedEndDate.ToString("dd.MM.yyyy HH:mm")</dd>
+
+                    <dt class="col-sm-5">Текущая дата</dt>
+                    <dd class="col-sm-7">@DateTime.Now.ToString("dd.MM.yyyy HH:mm")</dd>
+
+                    <dt class="col-sm-5">Рассчитанная сумма</dt>
+                    <dd class="col-sm-7"><strong>@calculatedPrice.ToString("N0") &#8381;</strong></dd>
+
+                    @if (Model.Status == RentalStatus.Overdue)
+                    {
+                        <dt class="col-sm-5"></dt>
+                        <dd class="col-sm-7"><span class="badge bg-danger">Просрочен!</span></dd>
+                    }
+                </dl>
+            </div>
+        </div>
+
+        <form asp-action="Return" asp-route-id="@Model.Id" method="post">
+            <div class="mb-3">
+                <label class="form-label">Способ оплаты</label>
+                <select name="paymentMethod" class="form-select" required>
+                    <option value="Cash">Наличные</option>
+                    <option value="Card">Карта</option>
+                    <option value="Transfer">Перевод</option>
+                </select>
+            </div>
+
+            <button type="submit" class="btn btn-success" onclick="return confirm('Подтвердить возврат?');">Подтвердить возврат</button>
+            <a asp-action="Index" class="btn btn-secondary">Отмена</a>
+        </form>
+    </div>
+</div>

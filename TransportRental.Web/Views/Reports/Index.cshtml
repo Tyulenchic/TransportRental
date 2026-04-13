@@ -1,0 +1,149 @@
+@using TransportRental.Core.Services
+@{
+    ViewData["Title"] = "Отчёты";
+    var reportType = ViewBag.ReportType as string;
+    var dateFrom = (DateTime)ViewBag.DateFrom;
+    var dateTo = (DateTime)ViewBag.DateTo;
+    var revenueData = ViewBag.RevenueData as List<RevenueReportItem>;
+    var categoryData = ViewBag.CategoryData as List<CategoryReportItem>;
+    var popularData = ViewBag.PopularData as List<PopularVehicleItem>;
+}
+
+<h2>Отчёты</h2>
+
+<form method="get" class="row g-3 mb-4">
+    <div class="col-md-3">
+        <label class="form-label">Тип отчёта</label>
+        <select name="reportType" class="form-select">
+            <option value="">-- Выберите --</option>
+            <option value="revenue" selected="@(reportType == "revenue")">Выручка по дням</option>
+            <option value="category" selected="@(reportType == "category")">По категориям</option>
+            <option value="popular" selected="@(reportType == "popular")">Популярный транспорт</option>
+        </select>
+    </div>
+    <div class="col-md-2">
+        <label class="form-label">Дата с</label>
+        <input type="date" name="dateFrom" value="@dateFrom.ToString("yyyy-MM-dd")" class="form-control" />
+    </div>
+    <div class="col-md-2">
+        <label class="form-label">Дата по</label>
+        <input type="date" name="dateTo" value="@dateTo.ToString("yyyy-MM-dd")" class="form-control" />
+    </div>
+    <div class="col-md-3 d-flex align-items-end">
+        <button type="submit" class="btn btn-primary">Сформировать</button>
+    </div>
+</form>
+
+@if (!string.IsNullOrEmpty(reportType))
+{
+    <div class="mb-3">
+        <strong>Экспорт:</strong>
+        <a asp-action="ExportRevenue" asp-route-dateFrom="@dateFrom.ToString("yyyy-MM-dd")" asp-route-dateTo="@dateTo.ToString("yyyy-MM-dd")" class="btn btn-sm btn-outline-success">Выручка (Excel)</a>
+        <a asp-action="ExportCategory" asp-route-dateFrom="@dateFrom.ToString("yyyy-MM-dd")" asp-route-dateTo="@dateTo.ToString("yyyy-MM-dd")" class="btn btn-sm btn-outline-success">Категории (Excel)</a>
+        <a asp-action="ExportRentals" asp-route-dateFrom="@dateFrom.ToString("yyyy-MM-dd")" asp-route-dateTo="@dateTo.ToString("yyyy-MM-dd")" class="btn btn-sm btn-outline-success">Прокаты (Excel)</a>
+    </div>
+}
+
+@if (revenueData != null)
+{
+    <h4>Выручка по дням</h4>
+    <table class="table table-striped">
+        <thead class="table-dark">
+            <tr>
+                <th>Дата</th>
+                <th>Кол-во прокатов</th>
+                <th>Выручка</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in revenueData)
+            {
+                <tr>
+                    <td>@item.Date.ToString("dd.MM.yyyy")</td>
+                    <td>@item.RentalsCount</td>
+                    <td>@item.Revenue.ToString("N0") &#8381;</td>
+                </tr>
+            }
+        </tbody>
+        <tfoot>
+            <tr class="table-info fw-bold">
+                <td>Итого</td>
+                <td>@revenueData.Sum(x => x.RentalsCount)</td>
+                <td>@revenueData.Sum(x => x.Revenue).ToString("N0") &#8381;</td>
+            </tr>
+        </tfoot>
+    </table>
+    @if (!revenueData.Any())
+    {
+        <div class="alert alert-info">Данные не найдены за указанный период</div>
+    }
+}
+
+@if (categoryData != null)
+{
+    <h4>По категориям транспорта</h4>
+    <table class="table table-striped">
+        <thead class="table-dark">
+            <tr>
+                <th>Категория</th>
+                <th>Кол-во прокатов</th>
+                <th>Выручка</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in categoryData)
+            {
+                <tr>
+                    <td>@item.CategoryName</td>
+                    <td>@item.RentalsCount</td>
+                    <td>@item.Revenue.ToString("N0") &#8381;</td>
+                </tr>
+            }
+        </tbody>
+        <tfoot>
+            <tr class="table-info fw-bold">
+                <td>Итого</td>
+                <td>@categoryData.Sum(x => x.RentalsCount)</td>
+                <td>@categoryData.Sum(x => x.Revenue).ToString("N0") &#8381;</td>
+            </tr>
+        </tfoot>
+    </table>
+    @if (!categoryData.Any())
+    {
+        <div class="alert alert-info">Данные не найдены за указанный период</div>
+    }
+}
+
+@if (popularData != null)
+{
+    <h4>Популярный транспорт</h4>
+    <table class="table table-striped">
+        <thead class="table-dark">
+            <tr>
+                <th>#</th>
+                <th>Транспорт</th>
+                <th>Категория</th>
+                <th>Кол-во прокатов</th>
+                <th>Общая выручка</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{ var rank = 1; }
+            @foreach (var item in popularData)
+            {
+                <tr>
+                    <td>@rank</td>
+                    <td>@item.VehicleName</td>
+                    <td>@item.CategoryName</td>
+                    <td>@item.RentalsCount</td>
+                    <td>@item.TotalRevenue.ToString("N0") &#8381;</td>
+                </tr>
+                rank++;
+            }
+        </tbody>
+    </table>
+    @if (!popularData.Any())
+    {
+        <div class="alert alert-info">Данные не найдены за указанный период</div>
+    }
+}

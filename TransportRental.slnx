@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="TransportRental.Core/TransportRental.Core.csproj" />
+  <Project Path="TransportRental.Web/TransportRental.Web.csproj" />
+  <Project Path="TransportRental.WPF/TransportRental.WPF.csproj" />
+</Solution>

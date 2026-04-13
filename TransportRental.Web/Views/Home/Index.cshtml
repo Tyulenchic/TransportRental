@@ -1,0 +1,55 @@
+@{
+    ViewData["Title"] = "Главная";
+}
+
+<h2 class="mb-4">Панель управления</h2>
+
+<div class="row">
+    <div class="col-md-3 mb-3">
+        <div class="card text-white bg-primary shadow">
+            <div class="card-body">
+                <h5 class="card-title">Активные прокаты</h5>
+                <p class="card-text display-4">@ViewBag.ActiveRentals</p>
+            </div>
+            <div class="card-footer">
+                <a asp-controller="Rentals" asp-action="Index" asp-route-status="Active" class="text-white">Подробнее &rarr;</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3 mb-3">
+        <div class="card text-white bg-danger shadow">
+            <div class="card-body">
+                <h5 class="card-title">Просроченные</h5>
+                <p class="card-text display-4">@ViewBag.OverdueRentals</p>
+            </div>
+            <div class="card-footer">
+                <a asp-controller="Rentals" asp-action="Index" asp-route-status="Overdue" class="text-white">Подробнее &rarr;</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3 mb-3">
+        <div class="card text-white bg-success shadow">
+            <div class="card-body">
+                <h5 class="card-title">Всего транспорта</h5>
+                <p class="card-text display-4">@ViewBag.TotalVehicles</p>
+            </div>
+            <div class="card-footer">
+                <a asp-controller="Vehicles" asp-action="Index" class="text-white">Подробнее &rarr;</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3 mb-3">
+        <div class="card text-white bg-info shadow">
+            <div class="card-body">
+                <h5 class="card-title">Всего клиентов</h5>
+                <p class="card-text display-4">@ViewBag.TotalCustomers</p>
+            </div>
+            <div class="card-footer">
+                <a asp-controller="Customers" asp-action="Index" class="text-white">Подробнее &rarr;</a>
+            </div>
+        </div>
+    </div>
+</div>

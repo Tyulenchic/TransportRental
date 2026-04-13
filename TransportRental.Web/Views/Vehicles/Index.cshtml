@@ -1,0 +1,91 @@
+@model List<TransportRental.Core.Models.Vehicle>
+@{
+    ViewData["Title"] = "Транспорт";
+    var categories = ViewBag.Categories as List<TransportRental.Core.Models.VehicleCategory> ?? new();
+    var search = ViewBag.Search as string;
+    var categoryId = ViewBag.CategoryId as int?;
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2>Транспорт</h2>
+    @if (User.IsInRole("Администратор") || User.IsInRole("Менеджер"))
+    {
+        <a asp-action="Create" class="btn btn-primary">Добавить транспорт</a>
+    }
+</div>
+
+<form method="get" class="row g-3 mb-4">
+    <div class="col-md-4">
+        <input type="text" name="search" value="@search" class="form-control" placeholder="Поиск по названию..." />
+    </div>
+    <div class="col-md-3">
+        <select name="categoryId" class="form-select">
+            <option value="">Все категории</option>
+            @foreach (var cat in categories)
+            {
+                <option value="@cat.Id" selected="@(categoryId == cat.Id)">@cat.Name</option>
+            }
+        </select>
+    </div>
+    <div class="col-md-2">
+        <button type="submit" class="btn btn-outline-primary">Найти</button>
+        <a asp-action="Index" class="btn btn-outline-secondary">Сброс</a>
+    </div>
+</form>
+
+<table class="table table-striped table-hover">
+    <thead class="table-dark">
+        <tr>
+            <th>Название</th>
+            <th>Категория</th>
+            <th>Гос. номер</th>
+            <th>Год</th>
+            <th>Час. тариф</th>
+            <th>Дн. тариф</th>
+            <th>Доступен</th>
+            @if (User.IsInRole("Администратор") || User.IsInRole("Менеджер"))
+            {
+                <th>Действия</th>
+            }
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var v in Model)
+        {
+            <tr>
+                <td>@v.Name</td>
+                <td>@v.Category?.Name</td>
+                <td>@(v.LicensePlate ?? "---")</td>
+                <td>@(v.Year?.ToString() ?? "---")</td>
+                <td>@v.HourlyRate.ToString("N0") &#8381;</td>
+                <td>@v.DailyRate.ToString("N0") &#8381;</td>
+                <td>
+                    @if (v.IsAvailable)
+                    {
+                        <span class="badge bg-success">Да</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-secondary">Нет</span>
+                    }
+                </td>
+                @if (User.IsInRole("Администратор") || User.IsInRole("Менеджер"))
+                {
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@v.Id" class="btn btn-sm btn-warning">Изменить</a>
+                        <form asp-action="Delete" asp-route-id="@v.Id" method="post" class="d-inline"
+                              onsubmit="return confirm('Удалить транспорт?');">
+                            @Html.AntiForgeryToken()
+                            <button type="submit" class="btn btn-sm btn-danger">Удалить</button>
+                        </form>
+                    </td>
+                }
+            </tr>
+        }
+    </tbody>
+</table>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">Транспорт не найден</div>
+}

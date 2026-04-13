@@ -1,0 +1,50 @@
+@using TransportRental.Core.Models
+@{
+    ViewData["Title"] = "Оформить прокат";
+    var vehicles = ViewBag.Vehicles as List<Vehicle> ?? new();
+    var customers = ViewBag.Customers as List<Customer> ?? new();
+}
+
+<h2>Оформить прокат</h2>
+
+<div class="row">
+    <div class="col-md-6">
+        <form asp-action="Create" method="post">
+            <div class="mb-3">
+                <label class="form-label">Транспорт</label>
+                <select name="vehicleId" class="form-select" required>
+                    <option value="">-- Выберите транспорт --</option>
+                    @foreach (var v in vehicles)
+                    {
+                        <option value="@v.Id">@v.Name (@v.Category?.Name) - @v.DailyRate.ToString("N0") &#8381;/день</option>
+                    }
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Клиент</label>
+                <select name="customerId" class="form-select" required>
+                    <option value="">-- Выберите клиента --</option>
+                    @foreach (var c in customers)
+                    {
+                        <option value="@c.Id">@c.FullName (@c.Phone)</option>
+                    }
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Ожидаемая дата возврата</label>
+                <input type="datetime-local" name="expectedEndDate" class="form-control" required
+                       value="@DateTime.Now.AddDays(1).ToString("yyyy-MM-ddTHH:mm")" />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Примечания</label>
+                <textarea name="notes" class="form-control" rows="3"></textarea>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Оформить</button>
+            <a asp-action="Index" class="btn btn-secondary">Отмена</a>
+        </form>
+    </div>
+</div>

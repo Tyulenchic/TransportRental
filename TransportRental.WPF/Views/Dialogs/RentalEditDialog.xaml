@@ -1,0 +1,45 @@
+<Window x:Class="TransportRental.WPF.Views.Dialogs.RentalEditDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Новый прокат" Height="350" Width="500"
+        WindowStartupLocation="CenterOwner" ResizeMode="NoResize">
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/><RowDefinition Height="10"/>
+            <RowDefinition Height="Auto"/><RowDefinition Height="10"/>
+            <RowDefinition Height="Auto"/><RowDefinition Height="10"/>
+            <RowDefinition Height="Auto"/><RowDefinition Height="10"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="150"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <TextBlock Grid.Row="0" Text="Транспорт:*" VerticalAlignment="Center"/>
+        <ComboBox Grid.Row="0" Grid.Column="1" x:Name="VehicleBox" Padding="5" DisplayMemberPath="Name"
+                  SelectionChanged="Vehicle_Changed"/>
+
+        <TextBlock Grid.Row="2" Text="Клиент:*" VerticalAlignment="Center"/>
+        <ComboBox Grid.Row="2" Grid.Column="1" x:Name="CustomerBox" Padding="5" DisplayMemberPath="FullName"/>
+
+        <TextBlock Grid.Row="4" Text="Возврат до:*" VerticalAlignment="Center"/>
+        <DatePicker Grid.Row="4" Grid.Column="1" x:Name="ExpectedEndBox" SelectedDateChanged="Date_Changed"/>
+
+        <TextBlock Grid.Row="6" Text="Примерная цена:" VerticalAlignment="Center"/>
+        <TextBlock Grid.Row="6" Grid.Column="1" x:Name="PricePreview" FontWeight="Bold" FontSize="15"
+                   VerticalAlignment="Center"/>
+
+        <TextBlock Grid.Row="8" Text="Примечание:" VerticalAlignment="Center"/>
+        <TextBox Grid.Row="8" Grid.Column="1" x:Name="NotesBox" Padding="5" Height="40"
+                 TextWrapping="Wrap" AcceptsReturn="True"/>
+
+        <StackPanel Grid.Row="10" Grid.Column="0" Grid.ColumnSpan="2"
+                    Orientation="Horizontal" HorizontalAlignment="Right">
+            <Button Content="Оформить" Style="{StaticResource PrimaryButton}" Click="Save_Click" Width="120"/>
+            <Button Content="Отмена" Padding="15,8" Margin="10,0,0,0" Click="Cancel_Click" Width="100"/>
+        </StackPanel>
+    </Grid>
+</Window>
