@@ -11,7 +11,7 @@ public partial class App : Application
     public static IServiceProvider Services { get; private set; } = null!;
     public static Core.Models.User? CurrentUser { get; set; }
 
-    private const string ConnectionString = "Host=localhost;Port=5432;Database=transport_rental;Username=postgres;Password=123";
+    private const string ConnectionString = "Host=localhost;Port=5432;Database=transport_rental;Username=postgres;Password=test";
 
     private void OnStartup(object sender, StartupEventArgs e)
     {
